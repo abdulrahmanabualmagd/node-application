@@ -1,0 +1,8 @@
+-- going to separate the two databases - choose the project that I'm going to work on -- create the models for that project 
+-- don't forget to push updates for different works (auth, app  )
+
+005- Token verification from the auth providers
+004- Authentication system how does it work, required entities, third party authenications (Auth Providers), required libraries (Passport, bcrypt, ...)
+    003- Organize Directory Structure
+    002- Set sequelize for mssql, config file, index.js
+    001- Initizlize Node and install required entities
