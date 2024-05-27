@@ -1,26 +1,16 @@
 "use strict";
-const { Model } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
-    class User extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
-        static associate(models) {
-           
-        }
-    }
-    User.init(
-        {
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+    async up(queryInterface, Sequelize) {
+        await queryInterface.createTable("Users", {
             id: {
-                type: DataTypes.UUID,
-                defaultValud: DataTypes.UUIDV4,
+                type: Sequelize.UUID,
+                defaultValud: Sequelize.UUIDV4,
                 primaryKey: true,
                 allowNull: false,
             },
             username: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
                 unique: true,
                 validate: {
@@ -28,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             email: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
                 unique: true,
                 validate: {
@@ -37,43 +27,47 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             passwordHash: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
                 validate: {
                     notEmpty: true,
                 },
             },
             firstName: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
                 validate: {
                     notEmpty: true,
+                    min: 3,
+                    max: 15,
                 },
             },
             lastName: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
                 validate: {
                     notEmpty: true,
+                    min: 3,
+                    max: 15,
                 },
             },
             phone: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: true,
                 validate: {
                     is: /^[0-9]+$/i,
                 },
             },
             address: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: true,
             },
             lastLogin: {
-                type: DataTypes.DATE,
+                type: Sequelize.DATE,
                 allowNull: true,
             },
             status: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
                 defaultValue: "active",
                 validate: {
@@ -81,15 +75,21 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             salt: {
-                type: DataTypes.STRING,
+                type: Sequelize.STRING,
                 allowNull: false,
                 defaultValue: "",
             },
-        },
-        {
-            sequelize,
-            modelName: "User",
-        }
-    );
-    return User;
+            createdAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+            },
+            updatedAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+            },
+        });
+    },
+    async down(queryInterface, Sequelize) {
+        await queryInterface.dropTable("Users");
+    },
 };
