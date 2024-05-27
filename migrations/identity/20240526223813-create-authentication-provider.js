@@ -5,7 +5,7 @@ module.exports = {
         await queryInterface.createTable("AuthenticationProviders", {
             id: {
                 type: Sequelize.UUID,
-                defaultValud: Sequelize.UUIDV4,
+                defaultValue: Sequelize.UUIDV4,
                 primaryKey: true,
                 allowNull: false,
             },
@@ -34,6 +34,15 @@ module.exports = {
             updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
+            },
+            userId: {
+                type: Sequelize.UUID,
+                references: {
+                    model: "Users",
+                    key: "id",
+                },
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE",
             },
         });
     },

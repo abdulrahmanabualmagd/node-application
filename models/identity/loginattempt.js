@@ -8,14 +8,18 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
+            // User
+            LoginAttempt.belongsTo(models.User, {
+                as: "User",
+                foreignKey: "userId",
+            });
         }
     }
     LoginAttempt.init(
         {
             id: {
                 type: DataTypes.UUID,
-                defaultValud: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4,
                 primaryKey: true,
                 allowNull: false,
             },

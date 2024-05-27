@@ -8,14 +8,42 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-           
+            // Role
+            User.hasMany(models.Role, {
+                as: "Roles",
+                foreignKey: "userId",
+            });
+
+            // AuthProviders
+            User.hasMany(models.AuthenticationProvider, {
+                as: "AuthProviders",
+                foreignKey: "userId",
+            });
+
+            // ResetTokens
+            User.hasMany(models.PasswordResetToken, {
+                as: "ResetTokens",
+                foreignKey: "userId",
+            });
+
+            // Login Attempt
+            User.hasMany(models.LoginAttempt, {
+                as: "LoginAttempts",
+                foreignKey: "userId",
+            });
+
+            // VerifyTokens
+            User.hasMany(models.EmailVerificationToken, {
+                as: "VerifyTokens",
+                foreignKey: "userId",
+            });
         }
     }
     User.init(
         {
             id: {
                 type: DataTypes.UUID,
-                defaultValud: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4,
                 primaryKey: true,
                 allowNull: false,
             },

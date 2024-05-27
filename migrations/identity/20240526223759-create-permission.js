@@ -5,7 +5,7 @@ module.exports = {
         await queryInterface.createTable("Permissions", {
             id: {
                 type: Sequelize.UUID,
-                defaultValud: Sequelize.UUIDV4,
+                defaultValue: Sequelize.UUIDV4,
                 primaryKey: true,
                 allowNull: false,
             },

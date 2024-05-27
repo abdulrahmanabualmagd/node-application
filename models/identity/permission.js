@@ -8,14 +8,18 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
-            // define association here
+            Permission.hasMany(models.Role, {
+                through: "RolePermissions",
+                as: "permissionId",
+                foreignKey: "permissionId",
+            });
         }
     }
     Permission.init(
         {
             id: {
                 type: DataTypes.UUID,
-                defaultValud: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4,
                 primaryKey: true,
                 allowNull: false,
             },

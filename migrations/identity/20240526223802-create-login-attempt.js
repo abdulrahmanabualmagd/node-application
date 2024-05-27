@@ -5,14 +5,13 @@ module.exports = {
         await queryInterface.createTable("LoginAttempts", {
             id: {
                 type: Sequelize.UUID,
-                defaultValud: Sequelize.UUIDV4,
+                defaultValue: Sequelize.UUIDV4,
                 primaryKey: true,
                 allowNull: false,
             },
             timestamp: {
                 type: Sequelize.DATE,
                 allowNull: false,
-
             },
             ipAddress: {
                 type: Sequelize.STRING,
@@ -33,6 +32,15 @@ module.exports = {
             updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
+            },
+            userId: {
+                type: Sequelize.UUID,
+                references: {
+                    model: "Users",
+                    key: "id",
+                },
+                onDelete: "CASCADE",
+                onUpdate: "CASCADE",
             },
         });
     },
