@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes, uuidv4) => {
     class User extends Model {
         /**
          * Helper method for defining associations.
@@ -9,9 +9,11 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // Role
-            User.hasMany(models.Role, {
+            User.belongsToMany(models.Role, {
                 as: "Roles",
+                through: "UserRoles",
                 foreignKey: "userId",
+                otherKey: "roleId",
             });
 
             // AuthProviders
@@ -43,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             id: {
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: uuidv4(),
                 primaryKey: true,
                 allowNull: false,
             },

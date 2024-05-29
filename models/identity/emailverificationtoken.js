@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes, uuidv4) => {
     class EmailVerificationToken extends Model {
         /**
          * Helper method for defining associations.
@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             id: {
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: uuidv4(),
                 primaryKey: true,
                 allowNull: false,
             },

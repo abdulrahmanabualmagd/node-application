@@ -1,11 +1,14 @@
 "use strict";
+
+const { v4: uuidv4 } = require("uuid");
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
         await queryInterface.createTable("PasswordResetTokens", {
             id: {
                 type: Sequelize.UUID,
-                defaultValue: Sequelize.UUIDV4,
+                defaultValue: uuidv4(),
                 primaryKey: true,
                 allowNull: false,
             },
@@ -27,10 +30,12 @@ module.exports = {
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
+                defaultValue: Sequelize.NOW,
             },
             updatedAt: {
                 allowNull: false,
                 type: Sequelize.DATE,
+                defaultValue: Sequelize.NOW,
             },
             userId: {
                 type: Sequelize.UUID,
@@ -43,7 +48,7 @@ module.exports = {
             },
         });
     },
-    async down(queryInterface, Sequelize) {
+    async down(queryInterface, Sequelize, uuidv4) {
         await queryInterface.dropTable("PasswordResetTokens");
     },
 };

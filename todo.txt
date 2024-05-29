@@ -1,8 +1,13 @@
--- going to separate the two databases - choose the project that I'm going to work on -- create the models for that project 
--- don't forget to push updates for different works (auth, app  )
+000- Token verification from the auth providers
 
-005- Token verification from the auth providers
-004- Authentication system how does it work, required entities, third party authenications (Auth Providers), required libraries (Passport, bcrypt, ...)
+010- setup login and register workflow (routes, controllers, services, repository)
+
+    009- create hashPassword, verifyPassword (utils)
+    008- create createToken, verifyToken (utils)
+    007- Authentication system how does it work, required entities, third party authenications (Auth Providers), required libraries (Passport, bcrypt, ...)
+    006- setup all associations between identity models
+    005- separate both identity and application models (two separated databases)
+    004- create models and migration files for the identity
     003- Organize Directory Structure
     002- Set sequelize for mssql, config file, index.js
     001- Initizlize Node and install required entities
