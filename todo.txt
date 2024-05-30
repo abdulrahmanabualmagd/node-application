@@ -11,3 +11,6 @@
     003- Organize Directory Structure
     002- Set sequelize for mssql, config file, index.js
     001- Initizlize Node and install required entities
+
+
+move the authenticity to the middlewares
