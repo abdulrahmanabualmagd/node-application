@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
             token: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                unique: true,
                 validate: {
                     notEmpty: false,
                 },
@@ -37,6 +38,11 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
             userAgent: {
                 type: DataTypes.STRING,
                 allowNull: true,
+            },
+            expiresAt: {
+                type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: new Date(Date.now() + 1000 * 60 * 30), // 30 Minutes
             },
         },
         {

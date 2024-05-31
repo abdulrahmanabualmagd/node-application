@@ -15,6 +15,7 @@ module.exports = {
             token: {
                 type: Sequelize.STRING,
                 allowNull: false,
+                unique: true,
                 validate: {
                     notEmpty: false,
                 },
@@ -26,6 +27,11 @@ module.exports = {
             userAgent: {
                 type: Sequelize.STRING,
                 allowNull: true,
+            },
+            expiresAt: {
+                allowNull: false,
+                type: Sequelize.DATE,
+                defaultValue: Sequelize.literal("DATEADD(minute, 30, GETDATE())"), // This works for (MS SQL Server)
             },
             createdAt: {
                 allowNull: false,
