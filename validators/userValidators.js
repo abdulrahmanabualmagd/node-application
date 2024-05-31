@@ -26,6 +26,10 @@ exports.userLoginValidationRules = () => [
     body("password").notEmpty().withMessage("Password is required").isStrongPassword().withMessage("wrong Pass!"),
 ];
 
+exports.userResetPassValidationRules = () => [
+    body("email").notEmpty().withMessage("Email is Required").isEmail().withMessage("Email is invalid"),
+];
+
 exports.validateInputs = (req, res, next) => {
     // Get all recorded errors
     const errors = validationResult(req);

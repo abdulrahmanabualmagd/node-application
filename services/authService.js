@@ -1,7 +1,8 @@
 const { where } = require("sequelize");
 const db = require("../models/identity/index");
 const { hashPassword, verifyPassword } = require("../utils/passwordUtils");
-const { createToken, verifyToken } = require("../utils/tokenUtils");
+const { createToken } = require("../utils/tokenUtils");
+const { passwordResetToken, checkRecentToken } = require("../utils/passwordResetUtils");
 
 // ------------------------------- [ Register ] -------------------------------
 exports.registerService = async (req, res, next) => {
@@ -98,4 +99,48 @@ exports.loginService = async (req, res, next) => {
     }
 };
 
+// ------------------------------- [ Rest Password ] -------------------------------
+exports.resetPasswordService = async (req, res, next) => {
+    // Collect Data
+    const { email } = req.body;
 
+    if (!email) throw new Error("Missing required Field");
+
+    try {
+        // Get user
+        const user = await db.User.repo.find({ where: { email: email } });
+
+        // Check if user exists
+        if (!user) throw new Error("Email Not Found");
+
+        // Get user's reset tokens (if it exist, get the most recent to check for timeout)
+        const userRecentPasswordResetToken = await db.PasswordResetToken.repo.find({
+            where: {
+                userId: user.id,
+            },
+            order: [["createdAt", "DESC"]],
+        });
+
+        // Check reset token
+        if (userRecentPasswordResetToken) {
+            // Check availability to create another one if it has passed the specified time
+            const result = checkRecentToken(userRecentPasswordResetToken.createdAt);
+            if (result > 0)
+                throw new Error(`You have to wait ${result / (60 * 1000)} minutes before Generating another token`);
+        }
+
+        // Create String Token object
+        const passwordResetTokenObject = {
+            token: passwordResetToken(), // Default Bytes[64]
+            userId: user.id,
+            expiresAt: new Date(Date.now() + 1000 * 60 * process.env.RESET_PASSWORD_EXPIRATION),
+        };
+
+        // Store the token in database
+        db.PasswordResetToken.repo.create(passwordResetTokenObject);
+
+        return passwordResetTokenObject.token;
+    } catch (err) {
+        throw err;
+    }
+};
