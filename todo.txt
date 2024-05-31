@@ -1,4 +1,3 @@
-000- Token verification from the auth providers
 
 010- setup login and register workflow (routes, controllers, services, repository)
 
@@ -13,6 +12,9 @@
     001- Initizlize Node and install required entities
 
 
-move the authenticity to the middlewares
 search for error-handlers
 loggers as set in the jwt-express project 
+cookies and session
+seems that we're going to recreate sessions table on the models for cookies using
+test defualt date in password reset token @@
+mailers like (sendgrid), nodemailer
