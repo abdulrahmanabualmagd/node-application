@@ -14,3 +14,5 @@
 
 
 move the authenticity to the middlewares
+search for error-handlers
+loggers as set in the jwt-express project 
