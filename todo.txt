@@ -16,5 +16,8 @@ search for error-handlers
 loggers as set in the jwt-express project 
 cookies and session
 seems that we're going to recreate sessions table on the models for cookies using
-test defualt date in password reset token @@
 mailers like (sendgrid), nodemailer
+test password reset token use cases like trying 
+    - change pass in a short time
+    - entering old passwords
+    - if password changed the current token destroyed, what about the others, thing about deleting all the other tokenss
