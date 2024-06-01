@@ -1,4 +1,5 @@
 const services = require("./../services/authService");
+const { passwordResetMail } = require("../services/mailerService");
 
 exports.loginController = async (req, res, next) => {
     try {
@@ -20,15 +21,18 @@ exports.registerController = async (req, res, next) => {
 
 exports.resetPasswordGetTokenController = async (req, res, next) => {
     try {
+        // Get Token for User
         const token = await services.resetPasswordGetTokenService(req, res, next);
-        res.send(token);
+
+        // Send email for user
+        await passwordResetMail(req.body.email, token);
+        await res.send(token);
     } catch (err) {
         next(err);
     }
 };
 
 exports.resetPasswordVerifyTokenController = async (req, res, next) => {
-    
     try {
         const token = await services.resetPasswordVerifyTokenService(req, res, next);
         res.send(token);

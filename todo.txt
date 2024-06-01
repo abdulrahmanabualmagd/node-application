@@ -1,6 +1,6 @@
-
-010- setup login and register workflow (routes, controllers, services, repository)
-
+    
+    011- handle password reset (token generation and verification)
+    010- setup login and register workflow (routes, controllers, services, repository)
     009- create hashPassword, verifyPassword (utils)
     008- create createToken, verifyToken (utils)
     007- Authentication system how does it work, required entities, third party authenications (Auth Providers), required libraries (Passport, bcrypt, ...)
