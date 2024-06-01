@@ -1,8 +1,7 @@
-const { where } = require("sequelize");
 const db = require("../models/identity/index");
 const { hashPassword, verifyPassword } = require("../utils/passwordUtils");
 const { createToken } = require("../utils/tokenUtils");
-const { passwordResetToken, checkRecentToken } = require("../utils/passwordResetUtils");
+const { passwordResetToken, checkRecentToken, checkExpiration } = require("../utils/passwordResetUtils");
 
 // ------------------------------- [ Register ] -------------------------------
 exports.registerService = async (req, res, next) => {
@@ -100,7 +99,7 @@ exports.loginService = async (req, res, next) => {
 };
 
 // ------------------------------- [ Rest Password ] -------------------------------
-exports.resetPasswordService = async (req, res, next) => {
+exports.resetPasswordGetTokenService = async (req, res, next) => {
     // Collect Data
     const { email } = req.body;
 
@@ -140,6 +139,52 @@ exports.resetPasswordService = async (req, res, next) => {
         db.PasswordResetToken.repo.create(passwordResetTokenObject);
 
         return passwordResetTokenObject.token;
+    } catch (err) {
+        throw err;
+    }
+};
+
+exports.resetPasswordVerifyTokenService = async (req, res, next) => {
+    // Collect Data
+    const { token } = req.params;
+    const { password } = req.body;
+
+    // Check Data
+    if (!token || !password) throw new Error("Token or Password not found");
+
+    // Get Token
+    const userToken = await db.PasswordResetToken.repo.find({
+        where: { token: token },
+        order: [["createdAt", "DESC"]],
+        include: {
+            model: db.User,
+            as: "User",
+        },
+    });
+
+    // Check Existance Token
+    if (!userToken) throw new Error("Token Not Found");
+
+    // Check Token Expiration
+    if (checkExpiration(userToken.expiresAt)) throw new Error("Token Expired");
+
+    // Hash Password
+    const { hashedPassword, salt } = await hashPassword(password);
+
+    // Update User Password, Salt, UpdatedAt
+    userToken.User.passwordHash = hashedPassword;
+    userToken.User.salt = salt;
+    userToken.User.updatedAt = Date.now();
+
+    // Save Updated Valued for User
+    await userToken.User.save();
+
+    // Destroy Used Token
+    userToken.destroy();
+
+    return "Password Updated Successfully!";
+
+    try {
     } catch (err) {
         throw err;
     }

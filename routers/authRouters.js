@@ -1,17 +1,14 @@
 const router = require("express").Router();
-const { loginController, registerController, resetPasswordController } = require("../controllers/authController");
-const {
-    userResetPassValidationRules,
-    userRegisterValidationRules,
-    userLoginValidationRules,
-    validateInputs,
-} = require("../validators/userValidators");
+const auth = require("../controllers/authController");
+const validator = require("../validators/userValidators");
 
 // Login
-router.post("/login", userLoginValidationRules(), validateInputs, loginController);
+router.post("/login", validator.userLoginValidationRules(), validator.validateInputs, auth.loginController);
 // Register
-router.post("/register", userRegisterValidationRules(), validateInputs, registerController);
-// Reset
-router.post("/reset", userResetPassValidationRules(), validateInputs, resetPasswordController);
+router.post("/register", validator.userRegisterValidationRules(), validator.validateInputs, auth.registerController);
+// Reset Get Token
+router.post("/reset", validator.userResetPassValidationRules(), validator.validateInputs, auth.resetPasswordGetTokenController);
+// Reset Verify Token
+router.post("/reset/:token", auth.resetPasswordVerifyTokenController);
 
 module.exports = router;
