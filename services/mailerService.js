@@ -1,3 +1,5 @@
+// MailGun & SendGrid   offers free plan with limitations per month 
+
 const mailer = require("nodemailer");
 const fs = require("fs").promises;
 const path = require("path");
