@@ -23,21 +23,26 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
                 primaryKey: true,
                 allowNull: false,
             },
-            timestamp: {
-                type: DataTypes.DATE,
-                allowNull: false,
-            },
             ipAddress: {
                 type: DataTypes.STRING,
                 allowNull: true,
+                validate: {
+                    notEmpty: true,
+                },
             },
             userAgent: {
                 type: DataTypes.STRING,
                 allowNull: true,
+                validate: {
+                    notEmpty: true,
+                },
             },
             successful: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
         },
         {

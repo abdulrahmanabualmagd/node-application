@@ -17,7 +17,7 @@ module.exports = {
                 allowNull: false,
                 unique: true,
                 validate: {
-                    notEmpty: false,
+                    notEmpty: true,
                 },
             },
             ipAddress: {
@@ -29,8 +29,8 @@ module.exports = {
                 allowNull: true,
             },
             expiresAt: {
-                allowNull: false,
                 type: Sequelize.DATE,
+                allowNull: false,
                 defaultValue: Sequelize.literal("DATEADD(minute, 30, GETDATE())"), // This works for (MS SQL Server)
             },
             createdAt: {

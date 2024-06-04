@@ -27,11 +27,13 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
-                    notEmpty: false,
+                    notEmpty: true,
                 },
             },
             expiresAt: {
                 type: DataTypes.DATE,
+                allowNull: false,
+                defaultValue: new Date(Date.now() + 1000 * 60 * 30), // 30 Minutes
             },
         },
         {

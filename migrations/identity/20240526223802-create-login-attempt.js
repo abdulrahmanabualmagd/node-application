@@ -12,21 +12,26 @@ module.exports = {
                 primaryKey: true,
                 allowNull: false,
             },
-            timestamp: {
-                type: Sequelize.DATE,
-                allowNull: false,
-            },
             ipAddress: {
                 type: Sequelize.STRING,
                 allowNull: true,
+                validate: {
+                    notEmpty: true,
+                },
             },
             userAgent: {
                 type: Sequelize.STRING,
                 allowNull: true,
+                validate: {
+                    notEmpty: true,
+                },
             },
             successful: {
                 type: Sequelize.BOOLEAN,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             createdAt: {
                 allowNull: false,

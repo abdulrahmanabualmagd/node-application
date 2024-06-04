@@ -98,10 +98,6 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
-            lastLogin: {
-                type: DataTypes.DATE,
-                allowNull: true,
-            },
             status: {
                 type: DataTypes.STRING,
                 allowNull: false,

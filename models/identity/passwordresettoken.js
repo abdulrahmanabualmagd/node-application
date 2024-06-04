@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
                 allowNull: false,
                 unique: true,
                 validate: {
-                    notEmpty: false,
+                    notEmpty: true,
                 },
             },
             ipAddress: {

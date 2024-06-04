@@ -50,8 +50,6 @@ module.exports = {
                 allowNull: false,
                 validate: {
                     notEmpty: true,
-                    min: 3,
-                    max: 15,
                 },
             },
             phone: {
@@ -63,10 +61,6 @@ module.exports = {
             },
             address: {
                 type: Sequelize.STRING,
-                allowNull: true,
-            },
-            lastLogin: {
-                type: Sequelize.DATE,
                 allowNull: true,
             },
             status: {

@@ -16,7 +16,7 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false,
                 validate: {
-                    notEmpty: false,
+                    notEmpty: true,
                 },
             },
             providerUserID: {
@@ -28,7 +28,10 @@ module.exports = {
             },
             accessToken: {
                 type: Sequelize.STRING,
-                allowNull: true,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             createdAt: {
                 allowNull: false,

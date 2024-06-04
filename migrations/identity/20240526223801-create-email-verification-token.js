@@ -16,11 +16,13 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false,
                 validate: {
-                    notEmpty: false,
+                    notEmpty: true,
                 },
             },
             expiresAt: {
                 type: Sequelize.DATE,
+                allowNull: false,
+                defaultValue: Sequelize.literal("DATEADD(minute, 30, GETDATE())"), // This works for (MS SQL Server)
             },
             createdAt: {
                 allowNull: false,

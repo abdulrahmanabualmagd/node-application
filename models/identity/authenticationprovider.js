@@ -10,9 +10,9 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         static associate(models) {
             // User
             AuthenticationProvider.belongsTo(models.User, {
-                as: 'User',
+                as: "User",
                 foreignKey: "userId",
-            })
+            });
         }
     }
     AuthenticationProvider.init(
@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
-                    notEmpty: false,
+                    notEmpty: true,
                 },
             },
             providerUserID: {
@@ -39,7 +39,10 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
             },
             accessToken: {
                 type: DataTypes.STRING,
-                allowNull: true,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
         },
         {
