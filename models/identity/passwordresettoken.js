@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         {
             sequelize,
             modelName: "PasswordResetToken",
+            tableName: "password_reset_tokens",
         }
     );
     return PasswordResetToken;

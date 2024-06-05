@@ -114,7 +114,8 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         },
         {
             sequelize,
-            modelName: "User",
+            modelName: "User", // this name can be used as a ref to this model ( in the application )
+            tableName: "users",
         }
     );
     return User;

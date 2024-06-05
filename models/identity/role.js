@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         {
             sequelize,
             modelName: "Role",
+            tableName: "roles",
         }
     );
     return Role;

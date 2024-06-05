@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable("AuthenticationProviders", {
+        await queryInterface.createTable("authentication_providers", {
             id: {
                 type: Sequelize.UUID,
                 defaultValue: uuidv4(),
@@ -46,7 +46,7 @@ module.exports = {
             userId: {
                 type: Sequelize.UUID,
                 references: {
-                    model: "Users",
+                    model: "users",
                     key: "id",
                 },
                 onDelete: "CASCADE",
@@ -55,6 +55,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize, uuidv4) {
-        await queryInterface.dropTable("AuthenticationProviders");
+        await queryInterface.dropTable("authentication_providers");
     },
 };

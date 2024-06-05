@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         {
             sequelize,
             modelName: "AuthenticationProvider",
+            tableName: "authentication_providers",
         }
     );
     return AuthenticationProvider;

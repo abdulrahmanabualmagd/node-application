@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: "UserRole",
             primaryKey: ["userId", "roleId"],
+            tableName: "users_roles"
         }
     );
     return UserRole;

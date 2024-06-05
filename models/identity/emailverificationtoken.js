@@ -39,6 +39,7 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         {
             sequelize,
             modelName: "EmailVerificationToken",
+            tableName: "email_verification_tokens",
         }
     );
     return EmailVerificationToken;

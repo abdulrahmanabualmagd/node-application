@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         {
             sequelize,
             modelName: "LoginAttempt",
+            tableName: "login_attempts",
         }
     );
     return LoginAttempt;
