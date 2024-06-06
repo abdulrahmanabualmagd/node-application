@@ -1,10 +1,13 @@
-const db = require("../models/identity/index");
+const { dbIdentity } = require("../config/database");
 const { hashPassword, verifyPassword } = require("../utils/passwordUtils");
 const { createToken } = require("../utils/tokenUtils");
 const { passwordResetToken, checkRecentToken, checkExpiration } = require("../utils/passwordResetUtils");
 
 // ------------------------------- [ Register ] -------------------------------
 exports.registerService = async (req, res, next) => {
+    // Init Database
+    const db = await dbIdentity; // Because all indexes are returning a promise (all are async)
+
     // Collect Data
     const { username, email, password, firstName, lastName, phone, address } = req.body;
 
@@ -36,9 +39,9 @@ exports.registerService = async (req, res, next) => {
         const user = await db.User.repo.create(userData);
 
         // Get User Role
-        const role = await db.Role.repo.find({ where: { name: "user" } });
+        const role = await db.Role.repo.getOne({ where: { name: "user" } });
 
-        // Add Role to User
+        // Add Role to User 
         await user.addRole(role);
 
         // Return User
