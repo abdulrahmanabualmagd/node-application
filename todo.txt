@@ -1,23 +1,36 @@
-    
-    011- handle password reset (token generation and verification)
-    010- setup login and register workflow (routes, controllers, services, repository)
-    009- create hashPassword, verifyPassword (utils)
-    008- create createToken, verifyToken (utils)
-    007- Authentication system how does it work, required entities, third party authenications (Auth Providers), required libraries (Passport, bcrypt, ...)
-    006- setup all associations between identity models
-    005- separate both identity and application models (two separated databases)
-    004- create models and migration files for the identity
-    003- Organize Directory Structure
-    002- Set sequelize for mssql, config file, index.js
-    001- Initizlize Node and install required entities
-
 
 search for error-handlers
 loggers as set in the jwt-express project 
 cookies and session
-seems that we're going to recreate sessions table on the models for cookies using
-mailers like (sendgrid), nodemailer
-test password reset token use cases like trying 
-    - change pass in a short time
-    - entering old passwords
-    - if password changed the current token destroyed, what about the others, thing about deleting all the other tokenss
+Mailer - Handle rendering the template => make the button contain the generated token
+check adding roles to user
+ 
+
+
+# workflow #
+(MongoDB | Sql ) => (Mongoose(index) | Sequelize(index)) => ( onfig/database(main index) ) => Services => Controllers => Routers => app.js
+
+
+Application Directory Structure
+
+   my-express-app/
+   ├── config/                     # Configuration files for setting up databases and other services.
+   ├── controllers/                # Contains route handlers that manage incoming requests and outgoing responses.
+   ├── log/                        # Contains logs (may be .txt that record reason time err)
+   ├── models/                     # Defines data models and schemas for both Sequelize and Mongoose.
+   ├── migrations/                 # contains sequelize migrations files
+   ├── routes/                     # Holds route definitions, mapping URLs to specific controllers.
+   ├── services/                   # Contains business logic, separating it from the controllers.
+   ├── middlewares/                # Middleware functions for tasks such as authentication and error handling.
+   ├── validators/                 # Contains validators passed as a middleware to the routers before gonig to controllers
+   ├── utils/                      # Utility functions and helpers used throughout the project.
+   ├── seeders/                    # Contain initial data to start the application like Roles
+   ├── views/                      # Templating views for rendering HTML if using a templating engine like EJS or Pug.
+   ├── public/                     # Static files like CSS, JavaScript, and images accessible to the client.
+   ├── repository/                 # Contains reopsitories
+   
+   $ npx sequelize-cli db:create --config=config/app-config.js
+   $ npx sequelize-cli db:create --config=config/auth-config.js
+   $ npx sequelize-cli db:migrate --migrations-path migrations/Application --config=config/app-config.js
+   $ npx sequelize-cli db:migrate --migrations-path migrations/identity --config=config/auth-config.js
+
