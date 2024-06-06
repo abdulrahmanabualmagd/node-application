@@ -44,7 +44,7 @@ class Repository {
     }
 
     // findOne
-    async find(options = {}) {
+    async getOne(options = {}) {
         try {
             return await this.model.findOne(options);
         } catch (err) {
@@ -53,7 +53,7 @@ class Repository {
     }
 
     // Find or create
-    async findOrCreate(options = {}) {
+    async getOrCreate(options = {}) {
         try {
             const [result, created] = await this.model.findOrCreate(options);
             return {
@@ -66,7 +66,7 @@ class Repository {
     }
 
     // Find and Count All
-    async findAndCountAll(options = {}) {
+    async getAndCountAll(options = {}) {
         try {
             return await this.model.findAndCountAll(options);
         } catch (err) {
@@ -102,7 +102,7 @@ class Repository {
     }
 
     // --------------------------------------- [ Update ] ---------------------------------------
-    // Update
+    // Update   // Uses the primary key to update the rest of the properties
     async update(data, options = {}) {
         try {
             const [affectedRows] = await this.model.update(data, options);
@@ -137,9 +137,9 @@ class Repository {
 
     // --------------------------------------- [ Utilities] ---------------------------------------
     // Save
-    async saveData(options = {}) {
+    async saveData(document, options = {}) {
         try {
-            return await this.save(options);
+            return await document.save(options);
         } catch (err) {
             throw err;
         }
@@ -169,55 +169,6 @@ class Repository {
             return await this.decrement(fields, options);
         } catch (err) {
             throw err;
-        }
-    }
-
-    // --------------------------------------- [ Associations ] ---------------------------------------
-
-    // Set Association
-    async setAssociations(associations, options = {}) {
-        try {
-            await this.setAssociations(associations, options);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    // Add Association
-    async addAssociation(association, options = {}) {
-        try {
-            await this.addAssociation(association, options);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    // Remove Association
-    async removeAssociation(association, options = {}) {
-        try {
-            await this.removeAssociation(association, options);
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    // Has Association
-    async hasAssociation(association, options = {}) {
-        try {
-            const hasAssoc = await this.hasAssociation(association, options);
-            return hasAssoc;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    // Count Associations
-    async countAssociations(instance, options = {}) {
-        try {
-            const count = await this.countAssociations(options);
-            return count;
-        } catch (error) {
-            throw error;
         }
     }
 }
