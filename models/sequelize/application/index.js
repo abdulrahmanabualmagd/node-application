@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require("uuid");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require("./../../../config/application-config")[env];
-const Repository = require("../../../repository/sequelize/sequelize-repo");
+const Repository = require("./../../../repository/sequelize/sequelize-repo");
 
 module.exports = async () => {
     let db = {};
@@ -47,6 +47,7 @@ module.exports = async () => {
 
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;
+
 
 
     return db;

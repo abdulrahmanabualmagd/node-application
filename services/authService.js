@@ -16,7 +16,7 @@ exports.registerService = async (req, res, next) => {
 
     try {
         // Check email duplication
-        const emailduplicationResult = await db.User.repo.find({ where: { email: email } });
+        const emailduplicationResult = await db.User.repo.getOne({ where: { email: email } });
         if (emailduplicationResult) throw new Error("Dublicated Email");
 
         // Hash Password
@@ -35,14 +35,15 @@ exports.registerService = async (req, res, next) => {
             salt,
         };
 
+        // Check for roles before saving the user in the database
+        const role = await db.Role.repo.getOne({ name: "user" });
+        if (!role) throw Error("No roles found!");
+
         // Insert User to Database
         const user = await db.User.repo.create(userData);
 
-        // Get User Role
-        const role = await db.Role.repo.getOne({ where: { name: "user" } });
-
-        // Add Role to User 
-        await user.addRole(role);
+        // Add Role to User
+        await assignRole(user, role);
 
         // Return User
         return user;
@@ -53,6 +54,9 @@ exports.registerService = async (req, res, next) => {
 
 // ------------------------------- [ Login ] -------------------------------
 exports.loginService = async (req, res, next) => {
+    // Init Database
+    const db = await dbIdentity; // Because all indexes are returning a promise (all are async)
+
     // Collect Data
     const { email, password } = req.body;
 
@@ -61,7 +65,7 @@ exports.loginService = async (req, res, next) => {
 
     try {
         // Get User by Email
-        const user = await db.User.repo.find({
+        const user = await db.User.repo.getOne({
             where: { email: email },
             include: [
                 {
@@ -101,8 +105,11 @@ exports.loginService = async (req, res, next) => {
     }
 };
 
-// ------------------------------- [ Rest Password ] -------------------------------
+// ------------------------------- [ Rest Password (Generate) ] -------------------------------
 exports.resetPasswordGetTokenService = async (req, res, next) => {
+    // Init Database
+    const db = await dbIdentity; // Because all indexes are returning a promise (all are async)
+
     // Collect Data
     const { email } = req.body;
 
@@ -110,13 +117,13 @@ exports.resetPasswordGetTokenService = async (req, res, next) => {
 
     try {
         // Get user
-        const user = await db.User.repo.find({ where: { email: email } });
+        const user = await db.User.repo.getOne({ where: { email: email } });
 
         // Check if user exists
         if (!user) throw new Error("Email Not Found");
 
         // Get user's reset tokens (if it exist, get the most recent to check for timeout)
-        const userRecentPasswordResetToken = await db.PasswordResetToken.repo.find({
+        const userRecentPasswordResetToken = await db.PasswordResetToken.repo.getOne({
             where: {
                 userId: user.id,
             },
@@ -147,7 +154,11 @@ exports.resetPasswordGetTokenService = async (req, res, next) => {
     }
 };
 
+// ------------------------------- [ Rest Password (Verify) ] -------------------------------
 exports.resetPasswordVerifyTokenService = async (req, res, next) => {
+    // Init Database
+    const db = await dbIdentity; // Because all indexes are returning a promise (all are async)
+
     // Collect Data
     const { token } = req.params;
     const { password } = req.body;
@@ -156,7 +167,7 @@ exports.resetPasswordVerifyTokenService = async (req, res, next) => {
     if (!token || !password) throw new Error("Token or Password not found");
 
     // Get Token
-    const userToken = await db.PasswordResetToken.repo.find({
+    const userToken = await db.PasswordResetToken.repo.getOne({
         where: { token: token },
         order: [["createdAt", "DESC"]],
         include: {
@@ -188,6 +199,29 @@ exports.resetPasswordVerifyTokenService = async (req, res, next) => {
     return "Password Updated Successfully!";
 
     try {
+    } catch (err) {
+        throw err;
+    }
+};
+
+// ------------------------------- [ Assign Roles To User ] -------------------------------
+const assignRole = async (user, roleString) => {
+    // Init Database
+    const db = await dbIdentity; // Because all indexes are returning a promise (all are async)
+
+    try {
+        // Input validation
+        if (!user || !roleString) throw Error("Missing Arguments");
+
+        // Check for roles
+        const role = await db.Role.repo.getOne({ name: roleString }, { include: ["users"] });
+        if (!role) throw Error("No roles found!");
+
+        console.log(role);
+
+        role.users.push(user);
+
+        await role.save();
     } catch (err) {
         throw err;
     }

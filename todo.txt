@@ -34,3 +34,5 @@ Application Directory Structure
    $ npx sequelize-cli db:migrate --migrations-path migrations/Application --config=config/app-config.js
    $ npx sequelize-cli db:migrate --migrations-path migrations/identity --config=config/auth-config.js
 
+test database on the current identity authentication using mongoose and sequelie 
+stucked in assigning many to many

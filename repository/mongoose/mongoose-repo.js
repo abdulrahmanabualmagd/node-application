@@ -187,6 +187,9 @@ class Repository {
             throw err;
         }
     }
+
+    // --------------------------------------- [ Associations ] ---------------------------------------
+
 }
 
 module.exports = Repository;
