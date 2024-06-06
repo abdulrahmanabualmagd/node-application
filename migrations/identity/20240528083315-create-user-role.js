@@ -8,7 +8,7 @@ module.exports = {
                 allowNull: false,
                 primaryKey: true,
                 references: {
-                    model: "users",
+                    model: "User",
                     key: "id",
                 },
             },
@@ -17,7 +17,7 @@ module.exports = {
                 allowNull: false,
                 primaryKey: true,
                 references: {
-                    model: "roles",
+                    model: "Role",
                     key: "id",
                 },
             },

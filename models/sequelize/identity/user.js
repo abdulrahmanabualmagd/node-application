@@ -10,33 +10,33 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         static associate(models) {
             // Role
             User.belongsToMany(models.Role, {
-                as: "Roles",
-                through: "UserRoles",
+                as: "roles",
+                through: "UserRole",
                 foreignKey: "userId",
                 otherKey: "roleId",
             });
 
             // AuthProviders
             User.hasMany(models.AuthenticationProvider, {
-                as: "AuthProviders",
+                as: "authProviders",
                 foreignKey: "userId",
             });
 
             // ResetTokens
             User.hasMany(models.PasswordResetToken, {
-                as: "ResetTokens",
+                as: "resetTokens",
                 foreignKey: "userId",
             });
 
             // Login Attempt
             User.hasMany(models.LoginAttempt, {
-                as: "LoginAttempts",
+                as: "loginAttempts",
                 foreignKey: "userId",
             });
 
             // VerifyTokens
             User.hasMany(models.EmailVerificationToken, {
-                as: "VerifyTokens",
+                as: "verifyTokens",
                 foreignKey: "userId",
             });
         }

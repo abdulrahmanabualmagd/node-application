@@ -10,15 +10,15 @@ module.exports = (sequelize, DataTypes, uuidv4) => {
         static associate(models) {
             // User
             Role.belongsToMany(models.User, {
-                as: "Users",
-                through: "UserRoles",
+                as: "users",
+                through: "UserRole",
                 foreignKey: "roleId",
                 otherKey: "userId",
             });
 
             // Permissions
             Role.belongsToMany(models.Permission, {
-                through: "RolePermissions",
+                through: "RolePermission",
                 as: "permissions",
                 foreignKey: "roleId",
                 otherKey: "permissionId",

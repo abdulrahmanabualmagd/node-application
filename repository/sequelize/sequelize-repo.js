@@ -34,10 +34,10 @@ class Repository {
         }
     }
 
-    // findByPK
+    // findByPK -> findByPk
     async getById(id, options = {}) {
         try {
-            return await this.model.findByPK(id, options);
+            return await this.model.findByPk(id, options);
         } catch (err) {
             throw err;
         }
@@ -103,13 +103,13 @@ class Repository {
 
     // --------------------------------------- [ Update ] ---------------------------------------
     // Update   // Uses the primary key to update the rest of the properties
-    async update(data, options = {}) {
+    async update(id, data, options = {}) {
         try {
-            const [affectedRows] = await this.model.update(data, options);
+            const [affectedRows] = await this.model.update(data, { where: { id }, ...options });
 
             if (affectedRows === 0) return null;
 
-            return await this.findById(id);
+            return await this.getById(id);
         } catch (err) {
             throw err;
         }
@@ -121,6 +121,7 @@ class Repository {
         try {
             const affectedRows = await this.model.destroy(options);
             if (affectedRows === 0) return null;
+            return affectedRows;
         } catch (err) {
             throw err;
         }
@@ -146,27 +147,27 @@ class Repository {
     }
 
     // Reload
-    async reloadData(options = {}) {
+    async reloadData(document, options = {}) {
         try {
-            return await this.reload(options);
+            return await document.reload(options);
         } catch (err) {
             throw err;
         }
     }
 
     // Increment
-    async incrementFields(fields, options = {}) {
+    async incrementFields(document, fields, options = {}) {
         try {
-            return await this.increment(fields, options);
+            return await document.increment(fields, options);
         } catch (err) {
             throw err;
         }
     }
 
     // Decrement
-    async decrementFields(fields, options = {}) {
+    async decrementFields(document, fields, options = {}) {
         try {
-            return await this.decrement(fields, options);
+            return await document.decrement(fields, options);
         } catch (err) {
             throw err;
         }
@@ -174,6 +175,66 @@ class Repository {
 
     // --------------------------------------- [ Associations ] ---------------------------------------
 
+    async addAssociations(source, target, targetModelName) {
+        const addMethodName = `add${targetModelName}s`;
+        const targetAddMethodName = `add${source.constructor.name}`;
+
+        if (source[addMethodName]) {
+            await source[addMethodName](target);
+        } else if (target[targetAddMethodName]) {
+            await target[targetAddMethodName](source);
+        } else {
+            throw new Error(`Association methods ${addMethodName} or ${targetAddMethodName} not found`);
+        }
+    }
+
+    async setAssociations(source, target, targetModelName) {
+        const setMethodName = `set${targetModelName}s`;
+        const targetSetMethodName = `set${source.constructor.name}`;
+
+        if (source[setMethodName]) {
+            await source[setMethodName](target);
+        } else if (target[targetSetMethodName]) {
+            await target[targetSetMethodName](source);
+        } else {
+            throw new Error(`Association methods ${setMethodName} or ${targetSetMethodName} not found`);
+        }
+    }
+
+    async removeAssociations(source, target, targetModelName) {
+        const removeMethodName = `remove${targetModelName}s`;
+        const targetRemoveMethodName = `remove${source.constructor.name}`;
+
+        if (source[removeMethodName]) {
+            await source[removeMethodName](target);
+        } else if (target[targetRemoveMethodName]) {
+            await target[targetRemoveMethodName](source);
+        } else {
+            throw new Error(`Association methods ${removeMethodName} or ${targetRemoveMethodName} not found`);
+        }
+    }
+
+    async hasAssociation(source, target, targetModelName) {
+        const hasMethodName = `has${targetModelName}`;
+        const targetHasMethodName = `has${source.constructor.name}`;
+
+        if (source[hasMethodName]) {
+            return source[hasMethodName](target);
+        } else if (target[targetHasMethodName]) {
+            return target[targetHasMethodName](source);
+        } else {
+            throw new Error(`Association methods ${hasMethodName} or ${targetHasMethodName} not found`);
+        }
+    }
+
+    async countAssociations(source, targetModelName) {
+        const countMethodName = `count${targetModelName}s`;
+        if (source[countMethodName]) {
+            return source[countMethodName]();
+        } else {
+            throw new Error(`Count method ${countMethodName} not found`);
+        }
+    }
 }
 
 module.exports = Repository;

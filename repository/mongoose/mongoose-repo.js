@@ -9,7 +9,7 @@ class Repository {
     // Create
     async create(data, options = {}) {
         try {
-            return await this.model.create(data, options); // pre save hook won't work here s
+            return await this.model.create(data); // pre save hook will work here
         } catch (err) {
             throw err;
         }
@@ -26,16 +26,16 @@ class Repository {
 
     // --------------------------------------- [ Read ] ---------------------------------------
     // Select All
-    async getAll(options = {}) {
+    async getAll(options = { include: null, where: {} }) {
         try {
-            return await this.model.find(options).populate(options.include);
+            return await this.model.find(options.where).populate(options.include);
         } catch (err) {
             throw err;
         }
     }
 
     // findById
-    async getById(id, options = {}) {
+    async getById(id, options = { include: null }) {
         try {
             return await this.model.findById(id).populate(options.include);
         } catch (err) {
@@ -44,21 +44,21 @@ class Repository {
     }
 
     // findOne
-    async getOne(options = {}) {
+    async getOne(options = { include: null, where: {} }) {
         try {
-            return await this.model.findOne(options).populate(options.include);
+            return await this.model.findOne(options.where).populate(options.include);
         } catch (err) {
             throw err;
         }
     }
 
     // Find or create
-    async getOrCreate(condition, data, options = {}) {
+    async getOrCreate(data, options = { include: null, where: {} }) {
         try {
-            let document = await this.model.findOne(condition).populate(options.include);
+            let document = await this.model.findOne(options.where).populate(options.include);
             if (!document) {
                 document = new this.model(data);
-                await document.save(options);
+                await document.save();
                 return { result: document, created: true };
             }
             return { result: document, created: false };
@@ -68,10 +68,10 @@ class Repository {
     }
 
     // Find and Count All
-    async getAndCountAll(options = {}) {
+    async getAndCountAll(options = { include: null, where: {} }) {
         try {
-            const results = await this.model.find(options).populate(options.include);
-            const count = await this.model.countDocuments(options);
+            const results = await this.model.find(options.where).populate(options.include);
+            const count = await this.model.countDocuments(options.where);
             return { count, rows: results };
         } catch (err) {
             throw err;
@@ -79,19 +79,19 @@ class Repository {
     }
 
     // Count
-    async count(options = {}) {
+    async count(options = { where: {} }) {
         try {
-            return await this.model.countDocuments(options);
+            return await this.model.countDocuments(options.where);
         } catch (err) {
             throw err;
         }
     }
 
     // Maximum Value
-    async max(field, options = {}) {
+    async max(field, options = { where: {} }) {
         try {
             const result = await this.model
-                .findOne(options)
+                .findOne(options.where)
                 .sort({ [field]: -1 })
                 .select(field);
             return result ? result[field] : null;
@@ -101,10 +101,10 @@ class Repository {
     }
 
     // Sum
-    async sum(field, options = {}) {
+    async sum(field, options = { where: {} }) {
         try {
             const result = await this.model.aggregate([
-                { $match: options },
+                { $match: options.where },
                 { $group: { _id: null, total: { $sum: `$${field}` } } },
             ]);
             return result.length > 0 ? result[0].total : 0;
@@ -127,7 +127,7 @@ class Repository {
     // Delete
     async delete(options) {
         try {
-            const deletedDocument = await this.model.deleteOne(options);
+            const deletedDocument = await this.model.deleteOne(options.where);
             return deletedDocument.deletedCount > 0 ? deletedDocument : null;
         } catch (err) {
             throw err;
@@ -137,7 +137,7 @@ class Repository {
     // Truncate
     async truncate(options = {}) {
         try {
-            await this.model.deleteMany(options);
+            await this.model.deleteMany(options.where);
         } catch (err) {
             throw err;
         }
@@ -145,18 +145,18 @@ class Repository {
 
     // --------------------------------------- [ Utilities] ---------------------------------------
     // Save
-    async saveData(document, options = {}) {
+    async saveData(document) {
         try {
-            return await document.save(options);
+            return await document.save();
         } catch (err) {
             throw err;
         }
     }
 
     // Reload
-    async reloadData(document, options = {}) {
+    async reloadData(id, options = { include: null }) {
         try {
-            return await document.reload(options);
+            return await this.model.findById(id).populate(options.include);
         } catch (err) {
             throw err;
         }
@@ -169,7 +169,7 @@ class Repository {
             for (const field in fields) {
                 update[field] = { $inc: fields[field] };
             }
-            return await this.model.findByIdAndUpdate(id, update, { new: true, ...options });
+            return await this.model.findByIdAndUpdate(id, { $inc: fields }, { new: true, ...options });
         } catch (err) {
             throw err;
         }
@@ -182,14 +182,35 @@ class Repository {
             for (const field in fields) {
                 update[field] = { $inc: -fields[field] };
             }
-            return await this.model.findByIdAndUpdate(id, update, { new: true, ...options });
+            return await this.model.findByIdAndUpdate(id, { $inc: update }, { new: true, ...options });
         } catch (err) {
             throw err;
         }
     }
 
     // --------------------------------------- [ Associations ] ---------------------------------------
+    async addAssociations(source, targetArray) {
+        source[targetArray.field].push(...targetArray.values);
+        return source.save();
+    }
 
+    async setAssociations(source, targetArray) {
+        source[targetArray.field] = targetArray.values;
+        return source.save();
+    }
+
+    async removeAssociations(source, targetArray) {
+        source[targetArray.field] = source[targetArray.field].filter((value) => !targetArray.values.includes(value));
+        return source.save();
+    }
+
+    async hasAssociation(source, target) {
+        return source[target.field].includes(target.value);
+    }
+
+    async countAssociations(source, targetField) {
+        return source[targetField].length;
+    }
 }
 
 module.exports = Repository;

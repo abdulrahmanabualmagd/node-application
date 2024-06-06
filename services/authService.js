@@ -36,14 +36,18 @@ exports.registerService = async (req, res, next) => {
         };
 
         // Check for roles before saving the user in the database
-        const role = await db.Role.repo.getOne({ name: "user" });
+        const role = await db.Role.repo.getOne({
+            where: {
+                name: "user",
+            },
+        });
         if (!role) throw Error("No roles found!");
 
         // Insert User to Database
         const user = await db.User.repo.create(userData);
 
         // Add Role to User
-        await assignRole(user, role);
+        await db.User.repo.addAssociations(user, role, "Role");
 
         // Return User
         return user;
@@ -70,7 +74,7 @@ exports.loginService = async (req, res, next) => {
             include: [
                 {
                     model: db.Role,
-                    as: "Roles",
+                    as: "roles",
                 },
             ],
         });
@@ -81,8 +85,8 @@ exports.loginService = async (req, res, next) => {
 
         // Prepare All Roles Names
         const roles = [];
-        if (user.Roles.length > 0) {
-            for (let item of user.Roles) {
+        if (user.roles.length > 0) {
+            for (let item of user.roles) {
                 roles.push(item.name);
             }
         }
@@ -199,29 +203,6 @@ exports.resetPasswordVerifyTokenService = async (req, res, next) => {
     return "Password Updated Successfully!";
 
     try {
-    } catch (err) {
-        throw err;
-    }
-};
-
-// ------------------------------- [ Assign Roles To User ] -------------------------------
-const assignRole = async (user, roleString) => {
-    // Init Database
-    const db = await dbIdentity; // Because all indexes are returning a promise (all are async)
-
-    try {
-        // Input validation
-        if (!user || !roleString) throw Error("Missing Arguments");
-
-        // Check for roles
-        const role = await db.Role.repo.getOne({ name: roleString }, { include: ["users"] });
-        if (!role) throw Error("No roles found!");
-
-        console.log(role);
-
-        role.users.push(user);
-
-        await role.save();
     } catch (err) {
         throw err;
     }
