@@ -7,7 +7,7 @@ module.exports = {
                 type: Sequelize.UUID,
                 primaryKey: true,
                 references: {
-                    model: "roles",
+                    model: "roles",         // the name of the created table not the model name with capital letter
                     key: "id",
                 },
                 onDelete: "CASCADE",
@@ -17,7 +17,7 @@ module.exports = {
                 type: Sequelize.UUID,
                 primaryKey: true,
                 references: {
-                    model: "permissions",
+                    model: "permissions",   // the name of the created table not the model name with capital letter
                     key: "id",
                 },
                 onDelete: "CASCADE",

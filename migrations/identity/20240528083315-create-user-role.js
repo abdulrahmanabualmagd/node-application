@@ -8,7 +8,7 @@ module.exports = {
                 allowNull: false,
                 primaryKey: true,
                 references: {
-                    model: "User",
+                    model: "users",             // the name of the created table not the model name with capital letter
                     key: "id",
                 },
             },
@@ -17,7 +17,7 @@ module.exports = {
                 allowNull: false,
                 primaryKey: true,
                 references: {
-                    model: "Role",
+                    model: "roles",             // the name of the created table not the model name with capital letter
                     key: "id",
                 },
             },

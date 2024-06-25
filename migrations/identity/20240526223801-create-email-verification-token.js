@@ -37,7 +37,7 @@ module.exports = {
             userId: {
                 type: Sequelize.UUID,
                 references: {
-                    model: "users",
+                    model: "users",     // the name of the created table not the model name with capital letter
                     key: "id",
                 },
                 onDelete: "CASCADE",
