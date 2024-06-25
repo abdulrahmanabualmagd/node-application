@@ -1,3 +1,13 @@
+Sequelize{
+   - Identity migrations (FIXED)
+   - Identity Models (FIXED)
+}
+
+Sequelize-cli {
+   --migrations-path <path>
+   --config=<path>
+   --seeders-path <path>
+}
 
 search for error-handlers
 loggers as set in the jwt-express project 
@@ -12,7 +22,6 @@ check adding roles to user
 
 
 Application Directory Structure
-
    my-express-app/
    ├── config/                     # Configuration files for setting up databases and other services.
    ├── controllers/                # Contains route handlers that manage incoming requests and outgoing responses.
