@@ -2,13 +2,8 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
     class UserRole extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
-            // define association here
+            // In junction tables there are no association definitions to define
         }
     }
     UserRole.init(
@@ -17,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 allowNull: false,
                 references: {
-                    model: "User",
+                    model: "User",      // The name of the model itself (not the created table)
                     key: "id",
                 },
             },
@@ -25,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.UUID,
                 allowNull: false,
                 references: {
-                    model: "Role",
+                    model: "Role",      // The name of the model itself (not the created table)
                     key: "id",
                 },
             },
@@ -33,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
         {
             sequelize,
             modelName: "UserRole",
-            primaryKey: ["userId", "roleId"],
-            tableName: "users_roles"
+            primaryKey: ["userId", "roleId"],   // Composite primary key
+            tableName: "users_roles",
         }
     );
     return UserRole;

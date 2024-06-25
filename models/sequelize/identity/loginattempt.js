@@ -2,13 +2,8 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes, uuidv4) => {
     class LoginAttempt extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
-            // User
+            // User (this is enough we don't have to add the 'userId' attribute in the initialization)
             LoginAttempt.belongsTo(models.User, {
                 as: "user",
                 foreignKey: "userId",

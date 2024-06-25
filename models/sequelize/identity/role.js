@@ -2,26 +2,22 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes, uuidv4) => {
     class Role extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
+
         static associate(models) {
-            // User
+            // User (we include the ref 'roleId' in the junction table [ManyToMany])
             Role.belongsToMany(models.User, {
                 as: "users",
-                through: "UserRole",
+                through: "UserRole",        // The Model name of the junction table (not the name of the created table)
                 foreignKey: "roleId",
-                otherKey: "userId",
+                otherKey: "userId",         // (optional)
             });
 
-            // Permissions
+            // Permissions (we include the ref 'roleId' in the junction table [ManyToMany])
             Role.belongsToMany(models.Permission, {
-                through: "RolePermission",
                 as: "permissions",
+                through: "RolePermission",  // The model name of the junction table (not the name of the created tables)   
                 foreignKey: "roleId",
-                otherKey: "permissionId",
+                otherKey: "permissionId",   // (optional)
             });
         }
     }

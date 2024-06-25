@@ -2,18 +2,13 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes, uuidv4) => {
     class User extends Model {
-        /**
-         * Helper method for defining associations.
-         * This method is not a part of Sequelize lifecycle.
-         * The `models/index` file will call this method automatically.
-         */
         static associate(models) {
             // Role
             User.belongsToMany(models.Role, {
                 as: "roles",
-                through: "UserRole",
+                through: "UserRole", // The name of the model itself (not the name of the created table)
                 foreignKey: "userId",
-                otherKey: "roleId",
+                otherKey: "roleId", // (optional)
             });
 
             // AuthProviders
